@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار CSS تفاعلي</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        .quiz-container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: center;
+            width: 400px;
+        }
+
+        h1 {
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        .timer {
+            font-size: 16px;
+            color: #888;
+            margin-bottom: 20px;
+        }
+
+        #question {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        #options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #score-container {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>اختبار CSS</h1>
+        <p class="timer">الوقت المتبقي: <span id="timer">00:00</span></p>
+        <div class="question-container">
+            <p id="question"></p>
+            <div id="options"></div>
+        </div>
+        <button id="next-button" onclick="nextQuestion()">التالي</button>
+        <div id="score-container"></div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "ما هي الخاصية التي تحدد حجم الخط في CSS؟",
+                options: ["font-size", "line-height", "text-align", "font-weight"],
+                answer: "font-size"
+            },
+            {
+                question: "كيف يمكن تغيير لون الخلفية في CSS؟",
+                options: ["background-color", "color", "bg-color", "background-image"],
+                answer: "background-color"
+            },
+            {
+                question: "ما هي الخاصية التي تستخدم لمحاذاة النص في CSS؟",
+                options: ["text-align", "align-text", "justify-content", "center-align"],
+                answer: "text-align"
+            },
+            {
+                question: "ما هي وحدة القياس التي تستخدم لتحديد الحجم النسبي للخط في CSS؟",
+                options: ["em", "px", "cm", "in"],
+                answer: "em"
+            },
+            {
+                question: "ما هي الخاصية التي تستخدم لإنشاء هامش خارجي في CSS؟",
+                options: ["margin", "padding", "border", "space"],
+                answer: "margin"
+            },
+            {
+                question: "كيف يمكن تحديد خلفية صورة في CSS؟",
+                options: ["background-image", "background-picture", "image-background", "background-src"],
+                answer: "background-image"
+            },
+            {
+                question: "كيف يمكن جعل العناصر تكون في صف واحد باستخدام CSS؟",
+                options: ["display: inline", "display: block", "display: flex", "display: grid"],
+                answer: "display: flex"
+            },
+            {
+                question: "كيف يمكن إضافة ظل للنص في CSS؟",
+                options: ["text-shadow", "box-shadow", "shadow-text", "font-shadow"],
+                answer: "text-shadow"
+            },
+            {
+                question: "ما هي الوحدة التي تستخدم لقياس المسافات في CSS؟",
+                options: ["px", "pt", "em", "cm"],
+                answer: "px"
+            },
+            {
+                question: "كيف يمكن ضبط تباعد الأسطر في CSS؟",
+                options: ["line-height", "letter-spacing", "word-spacing", "text-indent"],
+                answer: "line-height"
+            },
+            {
+                question: "كيف يمكن جعل النص بالخط العريض في CSS؟",
+                options: ["font-weight: bold", "font-style: bold", "text-weight: bold", "font-bold: true"],
+                answer: "font-weight: bold"
+            },
+            {
+                question: "كيف يمكن تحديد حجم الخط في CSS؟",
+                options: ["font-size", "text-size", "line-size", "letter-size"],
+                answer: "font-size"
+            },
+            {
+                question: "كيف يمكن جعل الخلفية تغطي كامل الصفحة في CSS؟",
+                options: ["background-size: cover", "background-cover: full", "background-full: cover", "background-size: full"],
+                answer: "background-size: cover"
+            },
+            {
+                question: "ما هي الخاصية التي تستخدم لتحديد ترتيب العناصر داخل الحاوية؟",
+                options: ["order", "position", "align-items", "align-self"],
+                answer: "order"
+            },
+            {
+                question: "ما هي الخاصية التي تستخدم لتحديد عرض عنصر في CSS؟",
+                options: ["width", "height", "size", "length"],
+                answer: "width"
+            },
+            {
+                question: "كيف يمكن جعل العنصر ثابت في مكانه عند التمرير في CSS؟",
+                options: ["position: fixed", "position: static", "position: relative", "position: absolute"],
+                answer: "position: fixed"
+            },
+            {
+                question: "ما هي الخاصية التي تستخدم لتغيير الشكل الهندسي لعنصر؟",
+                options: ["border-radius", "border-style", "shape", "corner-radius"],
+                answer: "border-radius"
+            },
+            {
+                question: "كيف يمكن إخفاء عنصر في CSS؟",
+                options: ["display: none", "visibility: hidden", "opacity: 0", "none"],
+                answer: "display: none"
+            },
+            {
+                question: "كيف يمكن وضع إطار حول عنصر في CSS؟",
+                options: ["border", "outline", "frame", "border-width"],
+                answer: "border"
+            },
+            {
+                question: "ما هي الخاصية التي تستخدم لتحديد نمط الخط في CSS؟",
+                options: ["font-family", "font-style", "font-variant", "text-family"],
+                answer: "font-family"
+            },
+            {
+                question: "كيف يمكن ضبط تباعد الكلمات في CSS؟",
+                options: ["word-spacing", "letter-spacing", "line-spacing", "text-spacing"],
+                answer: "word-spacing"
+            },
+            {
+                question: "كيف يمكن تغيير الشفافية (التمويه) في CSS؟",
+                options: ["opacity", "transparency", "visibility", "blur"],
+                answer: "opacity"
+            },
+            {
+                question: "كيف يمكن ترتيب العناصر باستخدام CSS؟",
+                options: ["display: flex", "display: block", "position: relative", "position: absolute"],
+                answer: "display: flex"
+            },
+            {
+                question: "ما هي الوحدة التي تستخدم لقياس الحجوم النسبية في CSS؟",
+                options: ["em", "px", "pt", "in"],
+                answer: "em"
+            },
+            {
+                question: "كيف يمكن تحديد المسافة بين العناصر باستخدام CSS؟",
+                options: ["margin", "padding", "border", "gap"],
+                answer: "margin"
+            },
+            {
+                question: "ما هي الخاصية التي تُستخدم لتغيير لون النص في CSS؟",
+                options: ["color", "font-color", "text-color", "fill"],
+                answer: "color"
+            },
+            {
+                question: "كيف يمكن جعل النص مائلًا في CSS؟",
+                options: ["font-style: italic", "font-weight: italic", "text-style: italic", "style: italic"],
+                answer: "font-style: italic"
+            },
+            {
+                question: "كيف يمكن جعل عنصر يظهر فوق العناصر الأخرى في CSS؟",
+                options: ["z-index", "position", "layer", "stacking-order"],
+                answer: "z-index"
+            },
+            {
+                question: "كيف يمكن تغيير ارتفاع العنصر في CSS؟",
+                options: ["height", "width", "size", "length"],
+                answer: "height"
+            },
+            {
+                question: "ما هي الوحدة التي تُستخدم لقياس المسافات في CSS؟",
+                options: ["px", "em", "rem", "pt"],
+                answer: "px"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timerInterval;
+
+        function startQuiz() {
+            showQuestion();
+            startTimer();
+        }
+
+        function showQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            document.getElementById("question").textContent = currentQuestion.question;
+
+            const optionsContainer = document.getElementById("options");
+            optionsContainer.innerHTML = "";
+            currentQuestion.options.forEach(option => {
+                const button = document.createElement("button");
+                button.textContent = option;
+                button.onclick = () => checkAnswer(option);
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function checkAnswer(selectedOption) {
+            const correctAnswer = questions[currentQuestionIndex].answer;
+            if (selectedOption === correctAnswer) {
+                score++;
+            }
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                showQuestion();
+            } else {
+                showScore();
+            }
+        }
+
+        function showScore() {
+            const scoreContainer = document.getElementById("score-container");
+            scoreContainer.textContent = `لقد حصلت على ${score} من ${questions.length}`;
+            document.getElementById("next-button").style.display = 'none';
+        }
+
+        function startTimer() {
+            let timeLeft = 30 * 60;
+            timerInterval = setInterval(() => {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                document.getElementById("timer").textContent = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    showScore();
+                }
+                timeLeft--;
+            }, 1000);
+        }
+
+        startQuiz();
+    </script>
+</body>
+</html>

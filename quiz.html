@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار HTML تفاعلي</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        .quiz-container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: center;
+            width: 400px;
+        }
+
+        h1 {
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        .timer {
+            font-size: 16px;
+            color: #888;
+            margin-bottom: 20px;
+        }
+
+        #question {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        #options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #score-container {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>اختبار HTML</h1>
+        <p class="timer">الوقت المتبقي: <span id="timer">00:00</span></p>
+        <div class="question-container">
+            <p id="question"></p>
+            <div id="options"></div>
+        </div>
+        <button id="next-button" onclick="nextQuestion()">التالي</button>
+        <div id="score-container"></div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "ما هو العنصر الأساسي لإنشاء صفحة ويب في HTML؟",
+                options: ["<html>", "<head>", "<body>", "<div>"],
+                answer: "<html>"
+            },
+            {
+                question: "كيف يمكن إدراج صورة في صفحة HTML؟",
+                options: ["<img>", "<picture>", "<image>", "<src>"],
+                answer: "<img>"
+            },
+            {
+                question: "ما هو العنصر الذي يتم استخدامه لإنشاء جدول في HTML؟",
+                options: ["<table>", "<list>", "<grid>", "<chart>"],
+                answer: "<table>"
+            },
+            {
+                question: "ما هي الخاصية التي تستخدم لتحديد عنوان الصفحة في HTML؟",
+                options: ["<title>", "<head>", "<header>", "<meta>"],
+                answer: "<title>"
+            },
+            {
+                question: "كيف يمكن إدراج رابط في صفحة HTML؟",
+                options: ["<a>", "<link>", "<href>", "<url>"],
+                answer: "<a>"
+            },
+            {
+                question: "ما هو العنصر المستخدم لإنشاء قائمة غير مرتبة في HTML؟",
+                options: ["<ul>", "<ol>", "<li>", "<list>"],
+                answer: "<ul>"
+            },
+            {
+                question: "كيف يمكن إضافة تعليق في HTML؟",
+                options: ["<!-- تعليق -->", "// تعليق", "# تعليق", "/* تعليق */"],
+                answer: "<!-- تعليق -->"
+            },
+            {
+                question: "ما هو العنصر الذي يستخدم لإنشاء فقرة في HTML؟",
+                options: ["<p>", "<div>", "<span>", "<section>"],
+                answer: "<p>"
+            },
+            {
+                question: "ما هو العنصر المستخدم لتحديد رأس الصفحة في HTML؟",
+                options: ["<header>", "<footer>", "<head>", "<main>"],
+                answer: "<header>"
+            },
+            {
+                question: "ما هو العنصر الذي يستخدم لإضافة نص برمجي في HTML؟",
+                options: ["<script>", "<code>", "<pre>", "<div>"],
+                answer: "<script>"
+            },
+            {
+                question: "ما هو العنصر المستخدم لإضافة رابط إلى ورقة أنماط (CSS) في HTML؟",
+                options: ["<link>", "<style>", "<script>", "<css>"],
+                answer: "<link>"
+            },
+            {
+                question: "كيف يمكن إضافة فيديو في HTML؟",
+                options: ["<video>", "<audio>", "<media>", "<embed>"],
+                answer: "<video>"
+            },
+            {
+                question: "ما هو العنصر الذي يستخدم لتحديد عنوان فرعي في HTML؟",
+                options: ["<h2>", "<h3>", "<h1>", "<header>"],
+                answer: "<h2>"
+            },
+            {
+                question: "كيف يمكن إضافة تنسيق نصي في HTML باستخدام الخط؟",
+                options: ["<b>", "<i>", "<u>", "<font>"],
+                answer: "<b>"
+            },
+            {
+                question: "ما هو العنصر المستخدم لإنشاء رابط على صفحة الويب في HTML؟",
+                options: ["<a>", "<url>", "<link>", "<href>"],
+                answer: "<a>"
+            },
+            {
+                question: "ما هو العنصر الذي يحدد بداية مستند HTML؟",
+                options: ["<html>", "<head>", "<body>", "<start>"],
+                answer: "<html>"
+            },
+            {
+                question: "كيف يمكن إضافة صفحة جديدة (نافذة جديدة) عند الضغط على رابط؟",
+                options: ["target='_blank'", "target='new'", "window='_new'", "target='open'"],
+                answer: "target='_blank'"
+            },
+            {
+                question: "ما هو العنصر الذي يستخدم لتحديد القسم الرئيسي من الصفحة؟",
+                options: ["<main>", "<section>", "<article>", "<div>"],
+                answer: "<main>"
+            },
+            {
+                question: "كيف يمكن جعل النص معروضًا بخلفية في HTML؟",
+                options: ["<mark>", "<background>", "<span>", "<b>"],
+                answer: "<mark>"
+            },
+            {
+                question: "كيف يمكن إدراج ملف صوتي في صفحة HTML؟",
+                options: ["<audio>", "<sound>", "<music>", "<file>"],
+                answer: "<audio>"
+            },
+            {
+                question: "ما هو العنصر الذي يستخدم لتحديد بيانات الجدول في HTML؟",
+                options: ["<td>", "<th>", "<tr>", "<table>"],
+                answer: "<td>"
+            },
+            {
+                question: "ما هو العنصر الذي يحدد رأس الجدول في HTML؟",
+                options: ["<thead>", "<tfoot>", "<tr>", "<header>"],
+                answer: "<thead>"
+            },
+            {
+                question: "ما هو العنصر الذي يستخدم لإنشاء رابط إلى صفحة ويب أخرى في HTML؟",
+                options: ["<a href='...'>", "<link>", "<button>", "<form>"],
+                answer: "<a href='...'>"
+            },
+            {
+                question: "كيف يمكن تحديد العنوان الرئيسي للمستند في HTML؟",
+                options: ["<h1>", "<title>", "<head>", "<header>"],
+                answer: "<h1>"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timerInterval;
+
+        function startQuiz() {
+            showQuestion();
+            startTimer();
+        }
+
+        function showQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            document.getElementById("question").textContent = currentQuestion.question;
+
+            const optionsContainer = document.getElementById("options");
+            optionsContainer.innerHTML = "";
+            currentQuestion.options.forEach(option => {
+                const button = document.createElement("button");
+                button.textContent = option;
+                button.onclick = () => checkAnswer(option);
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function checkAnswer(selectedOption) {
+            const correctAnswer = questions[currentQuestionIndex].answer;
+            if (selectedOption === correctAnswer) {
+                score++;
+            }
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                showQuestion();
+            } else {
+                showScore();
+            }
+        }
+
+        function showScore() {
+            const scoreContainer = document.getElementById("score-container");
+            scoreContainer.textContent = `لقد حصلت على ${score} من ${questions.length}`;
+            document.getElementById("next-button").style.display = 'none';
+        }
+
+        function startTimer() {
+            let timeLeft = 30 * 60;
+            timerInterval = setInterval(() => {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                document.getElementById("timer").textContent = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    showScore();
+                }
+                timeLeft--;
+            }, 1000);
+        }
+
+        startQuiz();
+    </script>
+</body>
+</html>

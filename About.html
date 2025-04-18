@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>من نحن - FrontendAcademy</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .about {
+      padding: 60px 20px;
+      background-color: #f9fafb;
+      animation: fadeIn 1.2s ease-in-out;
+    }
+
+    .about-text {
+      font-size: 1.1rem;
+      color: #374151;
+      max-width: 700px;
+      margin: 20px auto;
+      line-height: 1.8;
+      animation: slideUp 1s ease forwards;
+      opacity: 0;
+    }
+
+    .about-text:nth-of-type(2) {
+      animation-delay: 0.5s;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(30px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container">
+      <h1 class="logo">FrontendAcademy</h1>
+      <ul class="nav-links">
+        <li><a href="index.html">الرئيسية</a></li>
+        <li><a href="courses.html">الكورسات</a></li>
+        <li><a href="About.html">من نحن</a></li>
+        
+      </ul>
+    </div>
+  </nav>
+
+  <!-- About Section -->
+  <section class="about">
+    <div class="container">
+      <h2 class="section-title">من نحن</h2>
+      <p class="about-text">
+        نحن في FrontendAcademy نسعى إلى تقديم تجربة تعليمية احترافية ومبسطة في مجال تطوير الواجهة الأمامية. مهمتنا هي تمكين المتعلمين العرب من بناء مواقع وتطبيقات ويب احترافية باستخدام HTML، CSS، JavaScript، وغيرها من التقنيات الحديثة.
+      </p>
+      <p class="about-text">
+        نقدم كورسات شاملة، عملية، وسهلة الفهم للمبتدئين والمحترفين على حد سواء، مع توفير بيئة داعمة وموارد متجددة باستمرار لمواكبة تطور عالم الويب.
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    &copy; 2025 FrontendAcademy - جميع الحقوق محفوظة
+  </footer>
+</body>
+</html>

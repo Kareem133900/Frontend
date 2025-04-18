@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار JavaScript تفاعلي</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        .quiz-container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: center;
+            width: 400px;
+        }
+
+        h1 {
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        .timer {
+            font-size: 16px;
+            color: #888;
+            margin-bottom: 20px;
+        }
+
+        #question {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        #options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #score-container {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>اختبار JavaScript</h1>
+        <p class="timer">الوقت المتبقي: <span id="timer">00:00</span></p>
+        <div class="question-container">
+            <p id="question"></p>
+            <div id="options"></div>
+        </div>
+        <button id="next-button" onclick="nextQuestion()">التالي</button>
+        <div id="score-container"></div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "ما هي الطريقة التي تستخدم لتحديد وظيفة في JavaScript؟",
+                options: ["function myFunction()", "func myFunction()", "function = myFunction()", "def myFunction()"],
+                answer: "function myFunction()"
+            },
+            {
+                question: "كيف يمكننا الإعلان عن متغير في JavaScript؟",
+                options: ["let x", "var x", "const x", "all of the above"],
+                answer: "all of the above"
+            },
+            {
+                question: "ما هو نوع البيانات الذي يمثل القيمة 42 في JavaScript؟",
+                options: ["String", "Number", "Boolean", "Object"],
+                answer: "Number"
+            },
+            {
+                question: "كيف يمكننا تحديد جملة شرطية في JavaScript؟",
+                options: ["if (x == 10)", "if x == 10", "if: x == 10", "when (x == 10)"],
+                answer: "if (x == 10)"
+            },
+            {
+                question: "كيف يمكننا إضافة تعليق في JavaScript؟",
+                options: ["// تعليق", "<!-- تعليق -->", "# تعليق", "/* تعليق */"],
+                answer: "// تعليق"
+            },
+            {
+                question: "ما هو العنصر الذي يعيد طول المصفوفة في JavaScript؟",
+                options: ["length", "size", "count", "total"],
+                answer: "length"
+            },
+            {
+                question: "ما هو الكود الذي يستخدم لتحويل النص إلى عدد في JavaScript؟",
+                options: ["parseInt()", "toNumber()", "parseFloat()", "convertToNumber()"],
+                answer: "parseInt()"
+            },
+            {
+                question: "ما هي الطريقة التي نستخدمها لإيقاف تنفيذ JavaScript؟",
+                options: ["break", "stop", "exit", "end"],
+                answer: "break"
+            },
+            {
+                question: "كيف نعلن عن دالة سهمية (Arrow Function) في JavaScript؟",
+                options: ["const func = () => {}", "const func = function() {}", "function() => {}", "function() {}"],
+                answer: "const func = () => {}"
+            },
+            {
+                question: "كيف يتم تنفيذ حلقة for في JavaScript؟",
+                options: ["for (i = 0; i < 10; i++) {}", "for (i; i < 10) {}", "for i in 10 {}", "loop (i = 0; i < 10)"],
+                answer: "for (i = 0; i < 10; i++) {}"
+            },
+            {
+                question: "ما هو الأمر الذي يعيد قيمة صحيحة (true) أو خطأ (false) في JavaScript؟",
+                options: ["boolean()", "isTrue()", "true/false", "Boolean()"],
+                answer: "Boolean()"
+            },
+            {
+                question: "كيف يمكننا الوصول إلى عنصر في مصفوفة في JavaScript؟",
+                options: ["array[0]", "array{0}", "array(0)", "array.0"],
+                answer: "array[0]"
+            },
+            {
+                question: "ما هي الطريقة التي نستخدمها للتبديل بين قيمتين في JavaScript؟",
+                options: ["x = y", "let x = !y", "x = !x", "let [x, y] = [y, x]"],
+                answer: "let [x, y] = [y, x]"
+            },
+            {
+                question: "ما هو الكود الذي يستخدم لتحويل القيمة إلى سلسلة نصية في JavaScript؟",
+                options: ["toString()", "stringify()", "parseString()", "convert()"],
+                answer: "toString()"
+            },
+            {
+                question: "كيف يمكننا دمج سلسلتين نصيتين في JavaScript؟",
+                options: ["string1 + string2", "concat(string1, string2)", "combine(string1, string2)", "string1.append(string2)"],
+                answer: "string1 + string2"
+            },
+            {
+                question: "كيف يمكننا منع المستخدم من إرسال نموذج في HTML باستخدام JavaScript؟",
+                options: ["event.preventDefault()", "return false;", "cancel()","stop()"],
+                answer: "event.preventDefault()"
+            },
+            {
+                question: "ما هي الكلمة الأساسية التي تستخدم لإنشاء كائن في JavaScript؟",
+                options: ["object", "new", "function", "create"],
+                answer: "new"
+            },
+            {
+                question: "كيف نختبر ما إذا كانت قيمة ما موجودة في مصفوفة في JavaScript؟",
+                options: ["includes()", "contains()", "has()", "exists()"],
+                answer: "includes()"
+            },
+            {
+                question: "ما هي الطريقة التي نستخدمها للتعامل مع الأخطاء في JavaScript؟",
+                options: ["try-catch", "handle-error", "catch-error", "error-try"],
+                answer: "try-catch"
+            },
+            {
+                question: "كيف يمكننا تحويل سلسلة نصية إلى حرف كبير في JavaScript؟",
+                options: ["toUpperCase()", "toBig()", "uppercase()", "capitalize()"],
+                answer: "toUpperCase()"
+            },
+            {
+                question: "كيف يمكننا إخراج النص في JavaScript؟",
+                options: ["console.log()", "alert()", "document.write()", "all of the above"],
+                answer: "all of the above"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timerInterval;
+
+        function startQuiz() {
+            showQuestion();
+            startTimer();
+        }
+
+        function showQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            document.getElementById("question").textContent = currentQuestion.question;
+
+            const optionsContainer = document.getElementById("options");
+            optionsContainer.innerHTML = "";
+            currentQuestion.options.forEach(option => {
+                const button = document.createElement("button");
+                button.textContent = option;
+                button.onclick = () => checkAnswer(option);
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function checkAnswer(selectedOption) {
+            const correctAnswer = questions[currentQuestionIndex].answer;
+            if (selectedOption === correctAnswer) {
+                score++;
+            }
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                showQuestion();
+            } else {
+                showScore();
+            }
+        }
+
+        function showScore() {
+            const scoreContainer = document.getElementById("score-container");
+            scoreContainer.textContent = `لقد حصلت على ${score} من ${questions.length}`;
+            document.getElementById("next-button").style.display = 'none';
+        }
+
+        function startTimer() {
+            let timeLeft = 30 * 60;
+            timerInterval = setInterval(() => {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                document.getElementById("timer").textContent = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    showScore();
+                }
+                timeLeft--;
+            }, 1000);
+        }
+
+        startQuiz();
+    </script>
+</body>
+</html>
